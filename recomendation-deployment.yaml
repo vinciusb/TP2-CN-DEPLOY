@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recomendation-deployment
+  namespace: viniciusfreire
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: viniciusfreire-playlist-recommender
+  template:
+    metadata:
+      labels:
+        app: viniciusfreire-playlist-recommender
+    spec:
+      initContainers:
+        - name: model-generator
+          image: vinciusb/model_generator:1.0.0
+          volumeMounts:
+          - mountPath: /tmp/data
+            name: shared-storage
+      containers:
+        - name: recomendation-engine
+          image: vinciusb/recomendation_engine:1.0.0
+          volumeMounts:
+          - mountPath: /tmp/data
+            name: shared-storage
+      volumes:
+      - name: shared-storage
+        persistentVolumeClaim:
+          claimName: viniciusfreire-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: recomendation-service
+spec:
+  selector:
+    app: viniciusfreire-playlist-recommender
+  ports:
+    - protocol: TCP
+      port: 52060       # External port
+      targetPort: 5000 # Pod's containerPort
+  type: LoadBalancer # Use NodePort or ClusterIP if you don't need an external IP
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: viniciusfreire-pvc
+  namespace: viniciusfreire
+spec:
+  accessModes:
+    - ReadWriteMany
+  selector:
+    matchLabels:
+      namespace: viniciusfreire
+  resources:
+    requests:
+      storage: 1Gi
+
+# ---
+
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   namespace: viniciusfreire
+#   name: project2-pv2-viniciusfreire
+# spec:
+#   capacity:
+#     storage: 1Gi
+#   storageClassName: default-storage-class
+#   accessModes:
+#     - ReadWriteMany
+#   persistentVolumeReclaimPolicy: Recycle
+#   hostPath:
+#     path: /home/vinicius/UFMG/9p/CN/TP2/project2-pv2
