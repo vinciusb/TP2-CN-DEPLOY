@@ -22,13 +22,15 @@ spec:
       containers:
         - name: recomendation-engine
           image: vinciusb/recomendation_engine:1.0.0
+          ports:
+            - containerPort: 5000
           volumeMounts:
           - mountPath: /tmp/data
             name: shared-storage
       volumes:
       - name: shared-storage
         persistentVolumeClaim:
-          claimName: viniciusfreire-pvc
+          claimName: project2-pvc-viniciusfreire
 
 ---
 
@@ -36,32 +38,35 @@ apiVersion: v1
 kind: Service
 metadata:
   name: recomendation-service
+  namespace: viniciusfreire
 spec:
   selector:
     app: viniciusfreire-playlist-recommender
   ports:
     - protocol: TCP
-      port: 52060       # External port
-      targetPort: 5000 # Pod's containerPort
-  type: LoadBalancer # Use NodePort or ClusterIP if you don't need an external IP
+      port: 52060
+      targetPort: 5000
+  type: LoadBalancer
 
 ---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: viniciusfreire-pvc
+  name: project2-pvc-viniciusfreire
   namespace: viniciusfreire
 spec:
+  storageClassName: default-storage-class-viniciusfreire
   accessModes:
     - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
   selector:
     matchLabels:
       namespace: viniciusfreire
-  resources:
-    requests:
-      storage: 500Mi
-  storageClassName: default-storage-class
+  volumeName: project2-pv2-viniciusfreire
+
 # ---
 
 # apiVersion: v1
@@ -71,8 +76,8 @@ spec:
 #   name: project2-pv2-viniciusfreire
 # spec:
 #   capacity:
-#     storage: 1Gi
-#   storageClassName: default-storage-class
+#     storage: 500Mi
+#   storageClassName: default-storage-class-viniciusfreire
 #   accessModes:
 #     - ReadWriteMany
 #   persistentVolumeReclaimPolicy: Recycle
