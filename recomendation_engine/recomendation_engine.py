@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 import pickle
 from itertools import accumulate
 import operator
+import os
+import datetime
 
 app = Flask(__name__)
 app.model = pickle.load(open("./data/model.pkl", "rb"))
@@ -32,12 +34,14 @@ def hello_world():
 
     # Use the model to generate recommendations (mock implementation here)
     recommended_songs = recomend_musics(user_songs)
+    modification_time = os.path.getmtime("/tmp/data/model.pkl")
+    readable_time = datetime.datetime.fromtimestamp(modification_time)
 
     # Build response
     response = {
         "songs": recommended_songs,
-        "version": 1,
-        "model_date": 2,
+        "version": app.model["versao"],
+        "model_date": readable_time,
     }
 
     return jsonify(response)

@@ -2,6 +2,7 @@
 from fpgrowth_py import fpgrowth
 import pandas as pd
 import pickle
+import os
 
 # %%
 
@@ -39,13 +40,14 @@ for rule in rules:
 mostFreqMusic = playlist_df["track_name"].value_counts().idxmax()
 
 # %%
-versao = 1
+versao = str(os.environ["LATEST_TAG"])
+print(versao)
 
 # %%
 model = {
     "musica_mais_frequente": mostFreqMusic,
     "inferencias": inferencias,
-    "versao": versao + 1,
+    "versao": versao,
 }
 
 # %%

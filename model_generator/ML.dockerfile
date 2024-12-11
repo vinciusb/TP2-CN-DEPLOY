@@ -2,6 +2,7 @@ FROM python:3.9-slim-bullseye
 RUN echo 'y' | apt-get update
 RUN echo 'y' | apt upgrade
 RUN echo 'y' | apt install wget
+RUN echo 'y' | apt-get install jq
 
 WORKDIR /tmp
 COPY ./requirements.txt ./requirements.txt

@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
         - name: model-generator
-          image: vinciusb/model_generator:1.0.0
+          image: vinciusb/model_generator:2.1.0
           volumeMounts:
           - mountPath: /tmp/data
             name: shared-storage
@@ -24,7 +24,7 @@ spec:
               value: https://raw.githubusercontent.com/vinciusb/TP2-CN-DATA/refs/heads/main/2023_spotify_ds1.csv
       containers:
         - name: recomendation-engine
-          image: vinciusb/recomendation_engine:1.0.0
+          image: vinciusb/recomendation_engine:2.0.0
           ports:
             - containerPort: 5000
           volumeMounts:
