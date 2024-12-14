@@ -18,11 +18,6 @@ jobs:
         git config user.name "github-actions"
         git config user.email "github-actions@github.com"
 
-    - name: Get current date and time
-      id: date
-      run: |
-        echo "tag_date=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-
     - name: Generate new tag
       id: tag
       run: |
@@ -30,21 +25,10 @@ jobs:
         latest_tag=$(git describe --tags --abbrev=0 || echo "0.0.0")
         echo "Latest tag: $latest_tag"
 
-        # Extract version components
-        IFS='.' read -r major minor patch <<< "${latest_tag#v}"
+        tag_date=$(date +'%Y%m%d%H%M%S')
 
-        # Increment patch version
-        if [[ -z "$major" || -z "$minor" || -z "$patch" ]]; then
-          major=0
-          minor=0
-          patch=0
-        fi
-        patch=$((patch + 1))
-
-        # Create new tag
-        new_tag="v$major.$minor.$patch"
-        echo "New tag: $new_tag"
-        echo "new_tag=$new_tag" >> $GITHUB_ENV
+        echo "New tag: $tag_date"
+        echo "new_tag=$tag_date" >> $GITHUB_ENV
 
     - name: Push new tag
       run: |
