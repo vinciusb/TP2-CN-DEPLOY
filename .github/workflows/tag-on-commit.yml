@@ -1,0 +1,53 @@
+name: Auto Tag on Commit
+
+on:
+  push:
+    branches:
+      - main  # Change this to your default branch name if it's not 'main'
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Git user
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+
+    - name: Get current date and time
+      id: date
+      run: |
+        echo "tag_date=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+    - name: Generate new tag
+      id: tag
+      run: |
+        # Check the latest tag
+        latest_tag=$(git describe --tags --abbrev=0 || echo "0.0.0")
+        echo "Latest tag: $latest_tag"
+
+        # Extract version components
+        IFS='.' read -r major minor patch <<< "${latest_tag#v}"
+
+        # Increment patch version
+        if [[ -z "$major" || -z "$minor" || -z "$patch" ]]; then
+          major=0
+          minor=0
+          patch=0
+        fi
+        patch=$((patch + 1))
+
+        # Create new tag
+        new_tag="v$major.$minor.$patch"
+        echo "New tag: $new_tag"
+        echo "new_tag=$new_tag" >> $GITHUB_ENV
+
+    - name: Push new tag
+      run: |
+        git tag ${{ env.new_tag }}
+        git push origin ${{ env.new_tag }}
+        echo "Pushed tag: ${{ env.new_tag }}"
