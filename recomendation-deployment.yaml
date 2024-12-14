@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
         - name: model-generator
-          image: vinciusb/model_generator:2.1.3
+          image: vinciusb/model_generator:2.1.4
           volumeMounts:
           - mountPath: /tmp/data
             name: shared-storage
