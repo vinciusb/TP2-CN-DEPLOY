@@ -5,8 +5,8 @@ import pickle
 import os
 
 # %%
-
-playlist_df = pd.read_csv("./data/2023_spotify_ds1.csv", delimiter=",")
+fileName = str(os.environ["REPO_URL"]).split("/")[-1].split(".")[0]
+playlist_df = pd.read_csv(f"../data/{fileName}.csv", delimiter=",")
 print(playlist_df.shape)
 playlist_df.head(5)
 
