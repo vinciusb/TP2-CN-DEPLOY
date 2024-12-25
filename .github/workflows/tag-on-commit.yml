@@ -12,6 +12,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+    - run: git fetch --prune --unshallow
 
     - name: Set up Git user
       run: |
@@ -23,13 +24,13 @@ jobs:
       run: |
         # Check the latest tag
         echo $(git describe --tags --abbrev=0)
-        latest_tag=$(git describe --tags --abbrev=0 || echo "0.0.0")
+        latest_tag=$(git describe --tags --abbrev=0 || echo "1.0.0")
         if [[ "$latest_tag" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
           major=${BASH_REMATCH[1]}
           minor=${BASH_REMATCH[2]}
           patch=${BASH_REMATCH[3]}
         else
-          major=0
+          major=1
           minor=0
           patch=0
         fi
