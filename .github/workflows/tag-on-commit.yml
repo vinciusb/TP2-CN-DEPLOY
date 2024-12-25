@@ -37,8 +37,8 @@ jobs:
 
         new_tag="$major.$minor.$new_patch"
 
-        echo "New tag: $tag_date"
-        echo "new_tag=$tag_date" >> $GITHUB_ENV
+        echo "New tag: $new_tag"
+        echo "new_tag=$new_tag" >> $GITHUB_ENV
 
     - name: Push new tag
       run: |
