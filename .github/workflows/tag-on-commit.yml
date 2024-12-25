@@ -23,9 +23,19 @@ jobs:
       run: |
         # Check the latest tag
         latest_tag=$(git describe --tags --abbrev=0 || echo "0.0.0")
+        if [[ "$latest_tag" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+          major=${BASH_REMATCH[1]}
+          minor=${BASH_REMATCH[2]}
+          patch=${BASH_REMATCH[3]}
+        else
+          major=0
+          minor=0
+          patch=0
+        fi
         echo "Latest tag: $latest_tag"
+        new_patch=$((patch + 1))
 
-        tag_date=$(date +'%Y/%m/%dT%H-%M-%S')
+        new_tag="$major.$minor.$new_patch"
 
         echo "New tag: $tag_date"
         echo "new_tag=$tag_date" >> $GITHUB_ENV

@@ -4,7 +4,7 @@ metadata:
   name: recomendation-deployment
   namespace: viniciusfreire
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: viniciusfreire-playlist-recommender
