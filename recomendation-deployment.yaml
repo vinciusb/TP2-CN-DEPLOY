@@ -21,7 +21,7 @@ spec:
             name: shared-storage
           env:
             - name: REPO_URL
-              value: https://raw.githubusercontent.com/vinciusb/TP2-CN-DATA/refs/heads/main/2023_spotify_ds2.csv
+              value: https://raw.githubusercontent.com/vinciusb/TP2-CN-DATA/refs/heads/main/2023_spotify_ds1.csv
       containers:
         - name: recomendation-engine
           image: vinciusb/recomendation_engine:2.0.0
