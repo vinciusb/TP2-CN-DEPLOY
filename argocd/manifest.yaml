@@ -1,0 +1,16 @@
+project: viniciusfreire-project
+source:
+  repoURL: https://github.com/vinciusb/TP2-CN-DEPLOY.git
+  path: .
+  targetRevision: main
+destination:
+  server: https://kubernetes.default.svc
+  namespace: viniciusfreire
+syncPolicy:
+  automated: {}
+  retry:
+    limit: 2
+    backoff:
+      duration: 5s
+      factor: 2
+      maxDuration: 3m0s
